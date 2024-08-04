@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .html,
+        body {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .card {
+            width: 300px;
+            margin: 0 auto;
+            margin-top: 200px;
+            background: repeating-linear-gradient(-45deg,
+                    #e8544d,
+                    #e8544d 10px,
+                    #fff 10px,
+                    #fff 20px,
+                    #75adf5 20px,
+                    #75adf5 30px,
+                    #fff 30px,
+                    #fff 40px) -20px -20px /200% 200%;
+            padding: 10px;
+            transition: 0.5s;
+        }
+
+        .card:hover {
+            box-shadow: 0 3px 30px rgba(0, 0, 0, 0.6);
+            background-position: 0 0;
+        }
+
+        .container {
+            padding: 10px;
+            background: #fff;
+        }
+
+        .text-area {
+            font-size: 100px;
+            margin-left: 50%;
+            translate: -25%;
+            margin-top: 40px;
+
+            span {
+                color: #faebd7;
+                animation: shadowing 0.8s ease-in-out infinite alternate;
+            }
+        }
+
+        span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        span:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes shadowing {
+            to {
+                color: #ff0266;
+                text-shadow: 2px 0 18px #ff0266;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="text-area">
+        <span>L</span>
+        <span>O</span>
+        <span>V</span>
+        <span>E</span>
+    </div>
+    <div class="card">
+        <div class="container">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos officia recusandae id eum animi veniam vero
+            perspiciatis, odit est repudiandae velit. Quibusdam explicabo repellendus sed exercitationem corrupti quasi
+            eaque beatae.
+        </div>
+    </div>
+</body>
+
+</html>

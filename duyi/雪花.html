@@ -1,0 +1,156 @@
+<!-- 先执行run()绘制文字，然后render()函数立即调用渲染，将绘制的文字清除。根据colors像素点位置绘制像素 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html,
+    body {
+      background-color: #000;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      /* 隐藏溢出内容 */
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="cvs"></canvas>
+</body>
+
+<script>
+  const cvs = document.querySelector('#cvs')
+  const ctx = cvs.getContext('2d')
+  const width = document.documentElement.clientWidth
+  const height = document.documentElement.clientHeight
+
+  cvs.width = width
+  cvs.height = height
+  ctx.fillStyle = '#fff'
+
+  //雪花点
+  const bgColors = Array.from(new Array(1000)).map(item => {
+    return {
+      x: Math.random() * width,
+      y: Math.random() * height,
+      speed: Math.random() * 2.5 + 0.5
+    }
+  })
+
+  let colors = []
+  //存储像素值到colors数组,并绘制文字
+  const sendText = (text, fontSize = 100, speed = 40) => {
+    ctx.fillStyle = '#000'
+    ctx.fillRect(0, 0, width, height)
+    ctx.font = `${fontSize}px 微软雅黑`
+    ctx.fillStyle = '#fff'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(text, width / 2, height / 2)
+
+    const data = ctx.getImageData(0, 0, width, height).data
+
+    const step = 4
+    let index = 0
+    let preIndex = 0
+
+    for (var i = 0; i < data.length; i += 4) {
+      const x = index % width
+      const y = parseInt(index / width)
+      if (x % step === 0 && y % step === 0 && data[i] === 255 && data[i + 1] === 255 && data[i + 2] === 255) {
+        //随机位置产生像素
+        const rx = parseInt(Math.random() * fontSize) + width / 2 - fontSize / 2
+        const ry = parseInt(Math.random() * fontSize) + height / 2 - fontSize / 2
+
+        //前后两次文字渲染位置
+        const item = colors[preIndex]
+        if (item) {
+          colors[preIndex] = {
+            x,
+            y,
+            rx: item.rx,
+            ry: item.ry,
+            speedX: Math.abs(rx, - item.x) / speed,
+            speedY: Math.abs(ry - item.y) / speed,
+          }
+        } else {
+          colors[preIndex] = {
+            x,
+            y,
+            rx,
+            ry,
+            speedX: Math.abs(rx - x) / speed,
+            speedY: Math.abs(ry - y) / speed,
+          }
+        }
+        preIndex++
+      }
+      index++
+    }
+    //本次文字比上次少
+    //preIndex 代表本次文字的像素个数，colors代表上次文字保存的像素数组
+    if (preIndex < colors.length) {
+      colors.splice(preIndex, colors.length - preIndex)
+    }
+  }
+  const render = () => {
+    ctx.clearRect(0, 0, width, height)
+    ctx.beginPath()
+    colors.forEach(item => {
+      //rx起始位置，x终止位置
+      if (item.rx > item.x) {
+        item.rx -= item.speedX
+        if (item.rx < item.x) {
+          item.rx = item.x
+        }
+      } else if (item.rx < item.x) {
+        item.rx += item.speedX
+        if (item.rx > item.x) {
+          item.rx = item.x
+        }
+      }
+
+      if (item.ry > item.y) {
+        item.ry -= item.speedY
+        if (item.ry < item.y) {
+          item.ry = item.y
+        }
+      } else if (item.ry < item.y) {
+        item.ry += item.speedY
+        if (item.ry > item.y) {
+          item.ry = item.y
+        }
+      }
+
+      ctx.fillRect(item.rx, item.ry, 3, 3)
+    })
+
+    bgColors.forEach(item => {
+      item.y = item.y > height ? 0 : item.y + item.speed
+      ctx.fillRect(item.x, item.y, 3, 3)
+    })
+    ctx.closePath()
+    requestAnimationFrame(render)
+  }
+  const awaitSendText = async (text, fontSize, speed) => {
+    return new Promise(resolve => {
+      sendText(text, fontSize, speed)
+      setTimeout(() => resolve(), 3000 + (speed > 40 ? 1000 : 0))
+    })
+  }
+
+  const run = async () => {
+    const text = `若是前生未有缘,待重结,来生愿。`.split(',')
+    for (let i = 0; i < text.length; i++) {
+      await awaitSendText(text[i], 150, 50)
+    }
+  } 
+  run()
+  render()
+</script>
+
+</html>

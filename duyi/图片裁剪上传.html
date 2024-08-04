@@ -1,0 +1,85 @@
+<!-- https://fengyuanchen.github.io/cropperjs/v2/zh/api/cropper-shade.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/cropperjs@next"></script>
+  <title>Document</title>
+  <style>
+    /* 使选框外边界不可见 */
+    .cropper-hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <section style="display: flex; justify-content: space-around;">
+    <div style="width: 500px; height: 500px;">
+      <cropper-canvas background theme-color="#fff" style="width: 100%; height: 100%;" id="box">
+        <cropper-image src="/imgs/湖边.jpg" alt="Picture"  style="width: 100%; height: 100%;" id="img" scalable skewable translatable ></cropper-image>
+        <cropper-handle action="select" plain></cropper-handle>
+        <cropper-selection movable resizable outlined id="cropperSelection" aspect-ratio="1">
+          <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
+          <cropper-handle action="n-resize"></cropper-handle>
+          <cropper-handle action="e-resize"></cropper-handle>
+          <cropper-handle action="s-resize"></cropper-handle>
+          <cropper-handle action="w-resize"></cropper-handle>
+          <cropper-handle action="ne-resize"></cropper-handle>
+          <cropper-handle action="nw-resize"></cropper-handle>
+          <cropper-handle action="se-resize"></cropper-handle>
+          <cropper-handle action="sw-resize"></cropper-handle>
+        </cropper-selection>
+      </cropper-canvas>
+    </div>
+    <div style="width: 120px; height: 120px;">
+      <cropper-viewer selection="#cropperSelection" id="viewer" resize="none"
+        style="width: 120px; height: 120px; border-radius: 50%;"></cropper-viewer>
+    </div>
+  </section>
+  <div>
+    <canvas id="canvas"></canvas>
+    <button id="saveButton">Save</button>
+  </div>
+
+  <script>
+    const btn = document.querySelector('#saveButton');
+    const cropperSelection = document.querySelector('#cropperSelection');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    btn.onclick = async () => {
+      //返回一个包含裁剪区域内容的 HTMLCanvasElement 对象
+      const cropCanvas = await cropperSelection.$toCanvas();
+      //toDataURL 是 HTMLCanvasElement 的一个方法，用于将 Canvas 的内容转换为一个包含图像表示的 data URL
+      const cropDataURL = cropCanvas.toDataURL();
+      // console.log(cropDataURL)
+      // console.log(cropCanvas)
+
+      //设置 canvas 维度
+      canvas.width = cropCanvas.width;
+      canvas.height = cropCanvas.height;
+
+      // 根据裁剪内容绘制图片
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0);
+        // saveImage(cropDataURL);
+      };
+      img.src = cropDataURL;
+    };
+
+    //下载图片
+
+    function saveImage(dataURL) {
+      const link = document.createElement('a');
+      link.href = dataURL;
+      link.download = 'cropped-image.png';
+      link.click();
+    }
+  </script>
+</body>
+
+</html>

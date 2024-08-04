@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+
+    /* 1.定义了四个线性渐变背景图片：
+
+    第一个和第三个渐变沿垂直方向（默认），创建了上下边框。
+    第二个和第四个渐变沿水平方向（90度），创建了左右边框。
+    每个渐变都有相同的模式：蓝色线条（#4cc7f3）在边框的起始和结束处，中间是透明的。 
+    
+    
+    2.设置了背景图片的位置：
+
+    第一个和第二个渐变图片位于盒子的左上角。
+    第三个和第四个渐变图片位于盒子的右下角。
+    
+    3.设置了背景图片的大小：
+
+    第一个和第三个渐变图片的宽度为 10 像素，高度为 100%。
+    第二个和第四个渐变图片的宽度为 100%，高度为 10 像素。*/
+    .box{
+      width: 200px;
+      height: 200px;
+      padding: 10px;
+      background-origin: content-box;
+      background-color: #0e294c;
+      background-image:
+        linear-gradient(#4cc7f3 2px, transparent 2px, transparent calc(100% - 2px), #4cc7f3 calc(100% - 2px), #4cc7f3 100%),
+        linear-gradient(90deg, #4cc7f3 2px, transparent 2px, transparent calc(100% - 2px), #4cc7f3 calc(100% - 2px), #4cc7f3 100%),
+        linear-gradient(#4cc7f3 2px, transparent 2px, transparent calc(100% - 2px), #4cc7f3 calc(100% - 2px), #4cc7f3 100%),
+        linear-gradient(90deg, #4cc7f3 2px, transparent 2px, transparent calc(100% - 2px), #4cc7f3 calc(100% - 2px), #4cc7f3 100%);
+      background-repeat: no-repeat;
+      background-position: top left, top left, bottom right, bottom right;
+      background-size: 10px 100%, 100% 10px;
+
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box"></div>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button>选择文件夹</button>
+  <div id="box"></div>
+
+  <script>
+    const btn = document.querySelector('button')
+    const box = document.querySelector('#box')
+
+    btn.onclick = async function () {
+      try {
+        const handle = await showDirectoryPicker()  //选择文件夹
+
+        console.log(handle,'handle') //其中没有children属性，需进一步处理
+        const root = await processHandle(handle)
+        console.log(root,'root')
+        const fileHandle = root.children[2]
+        const file = await fileHandle.getFile()
+
+        const reader = new FileReader()
+
+        reader.readAsText(file, 'utf-8')
+        reader.onload = e => {
+          // console.log(e.target.result)
+          box.outerHTML = e.target.result
+        }
+
+      } catch (error) {
+        //用户拒绝权限 
+        alert('用户拒绝权限 ')
+      }
+    }
+
+    //处理文件夹句柄
+    async function processHandle(handle) {
+      //如果是文件，没有子内容则返回
+      if (handle.kind === 'file') {
+        return handle
+      }
+      handle.children = []
+      //异步迭代器
+      const iter = handle.entries()
+      for await (const item of iter) {
+        // console.log(item,'item')
+        handle.children.push(await processHandle(item[1])) //item[0]为文件名称 item[1]为FileSystemDirectoryHandle文件柄
+      }
+      return handle
+    }
+  </script>
+</body>
+
+</html>

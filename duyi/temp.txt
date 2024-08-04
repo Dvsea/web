@@ -1,0 +1,8 @@
+colors[0] = {
+  x,
+  y,
+  rx,
+  ry,
+  speedX: Math.abs(rx - x) / speed,
+  speedY: Math.abs(ry - y) / speed,
+}

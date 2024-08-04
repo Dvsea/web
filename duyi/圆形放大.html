@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body{
+            background-color:gray;
+        }
+        .avatar {
+            background-image: url(./imgs/小草.jpg);
+            background-size: cover;
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            margin: 0 auto;
+            margin-top: 10%;
+        }
+
+        .avatar::after,
+        .avatar::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+        }
+
+        .avatar::before{
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        .avatar::after{
+            background:inherit;
+            clip-path:circle(0% at 50% 50%); /* 裁剪半径为0%，位置位于圆心 */
+            transition: 0.5s;
+        }
+        .avatar:hover::after{
+            clip-path: circle(50% at 50% 50%);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="avatar"></div>
+</body>
+
+</html>
